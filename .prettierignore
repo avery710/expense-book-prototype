@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+coverage
+*.log
+.next
+.cache
+**/.git
+package-lock.json
+yarn.lock
