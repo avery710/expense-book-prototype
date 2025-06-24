@@ -16,14 +16,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import MultiSelect, { type Option } from "@/components/ui/multiSelect";
+import { toast } from "sonner";
 
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
 
-type FormValues = {
-  name: string;
-  members: string[];
-  currency: string;
-};
+const schema = z.object({
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(50, "Name must be at most 50 characters"),
+  members: z.array(z.string()).min(1, "Select at least one member"),
+  currency: z.string().min(1, "Select a currency"),
+});
+
+type FormValues = z.infer<typeof schema>;
 
 export default function CreateExpenseBookPage() {
   const memberOptions: Option[] = [
@@ -35,10 +44,11 @@ export default function CreateExpenseBookPage() {
   ];
 
   const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       members: [],
-      currency: "USD",
+      currency: "TWD",
     },
   });
 
@@ -46,6 +56,16 @@ export default function CreateExpenseBookPage() {
     alert(
       `Name: ${values.name}\nMembers: ${values.members.join(", ")}\nCurrency: ${values.currency}`
     );
+  }
+
+  function handleError(errors: any) {
+    const messages = Object.values(errors)
+      .map((err: any) => err?.message)
+      .filter(Boolean)
+      .join("\n");
+    if (messages) {
+      toast.error(messages);
+    }
   }
 
   return (
@@ -58,7 +78,10 @@ export default function CreateExpenseBookPage() {
       </div>
       <div className="bg-card rounded-lg p-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(onSubmit, handleError)}
+            className="space-y-6"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -66,12 +89,7 @@ export default function CreateExpenseBookPage() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <input
-                      type="text"
-                      className="w-full rounded border px-3 py-2 text-base"
-                      required
-                      {...field}
-                    />
+                    <Input placeholder="Enter expense book name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
