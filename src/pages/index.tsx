@@ -1,10 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { useAppSelector } from "@/stores/hooks";
+import { useAppSelector, useAppDispatch } from "@/stores/hooks";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { removeExpenseBook } from "@/stores/slices/expenseBooksSlice";
+import { toast } from "sonner";
 
 export default function IndexPage() {
   const expenseBooks = useAppSelector(state => state.expenseBooks);
+  const dispatch = useAppDispatch();
+
+  const handleDelete = (id: string, name: string) => {
+    dispatch(removeExpenseBook(id));
+    toast.success(`Deleted expense book: ${name}`);
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -18,8 +26,15 @@ export default function IndexPage() {
         ) : (
           expenseBooks.map(book => (
             <Card key={book.id}>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>{book.name}</CardTitle>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleDelete(book.id, book.name)}
+                >
+                  Delete
+                </Button>
               </CardHeader>
               <CardContent>
                 <div className="mb-2">
