@@ -3,10 +3,16 @@ import { Link } from "@tanstack/react-router";
 import { useAppSelector, useAppDispatch } from "@/stores/hooks";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { removeExpenseBook } from "@/stores/slices/expenseBooksSlice";
+import { toast } from "sonner";
 
 export default function IndexPage() {
   const expenseBooks = useAppSelector(state => state.expenseBooks);
   const dispatch = useAppDispatch();
+
+  const handleDelete = (id: string, name: string) => {
+    dispatch(removeExpenseBook(id));
+    toast.success(`Deleted expense book: ${name}`);
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -25,7 +31,7 @@ export default function IndexPage() {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => dispatch(removeExpenseBook(book.id))}
+                  onClick={() => handleDelete(book.id, book.name)}
                 >
                   Delete
                 </Button>
