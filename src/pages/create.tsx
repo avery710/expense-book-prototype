@@ -50,7 +50,7 @@ export default function CreateExpenseBookPage() {
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
-      members: [],
+      members: ["Avery"],
       currency: "TWD",
     },
   });
