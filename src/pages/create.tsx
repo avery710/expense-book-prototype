@@ -143,10 +143,11 @@ export default function CreateExpenseBookPage() {
                         <SelectValue placeholder="Select currency" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="USD">TWD</SelectItem>
-                        <SelectItem value="EUR">USD</SelectItem>
-                        <SelectItem value="TWD">EUR</SelectItem>
+                        <SelectItem value="TWD">TWD</SelectItem>
+                        <SelectItem value="USD">USD</SelectItem>
+                        <SelectItem value="EUR">EUR</SelectItem>
                         <SelectItem value="JPY">JPY</SelectItem>
+                        <SelectItem value="THB">THB</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
