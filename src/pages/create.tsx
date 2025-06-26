@@ -7,7 +7,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   Select,
   SelectTrigger,
@@ -22,6 +22,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
+import { useAppDispatch } from "@/stores/hooks";
+import { addExpenseBook } from "@/stores/slices/expenseBooksSlice";
+import { v4 as uuidv4 } from "uuid";
 
 const schema = z.object({
   name: z
@@ -47,15 +50,26 @@ export default function CreateExpenseBookPage() {
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
-      members: [],
+      members: ["Avery"],
       currency: "TWD",
     },
   });
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   function onSubmit(values: FormValues) {
-    alert(
-      `Name: ${values.name}\nMembers: ${values.members.join(", ")}\nCurrency: ${values.currency}`
+    dispatch(
+      addExpenseBook({
+        id: uuidv4(),
+        name: values.name,
+        members: values.members,
+        currency: values.currency,
+      })
     );
+    toast.success("Expense book created!");
+    form.reset();
+    navigate({ to: "/" });
   }
 
   function handleError(errors: any) {
@@ -129,10 +143,11 @@ export default function CreateExpenseBookPage() {
                         <SelectValue placeholder="Select currency" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="USD">TWD</SelectItem>
-                        <SelectItem value="EUR">USD</SelectItem>
-                        <SelectItem value="TWD">EUR</SelectItem>
+                        <SelectItem value="TWD">TWD</SelectItem>
+                        <SelectItem value="USD">USD</SelectItem>
+                        <SelectItem value="EUR">EUR</SelectItem>
                         <SelectItem value="JPY">JPY</SelectItem>
+                        <SelectItem value="THB">THB</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
