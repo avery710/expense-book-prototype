@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "@tanstack/react-router";
-import { useAppSelector, useAppDispatch } from "@/stores/hooks";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { removeExpenseBook } from "@/stores/slices/expenseBooksSlice";
+import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 export default function IndexPage() {
@@ -18,7 +18,7 @@ export default function IndexPage() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Expense Book</h1>
       <Button asChild className="mb-6">
-        <Link to="/create">Create New Expense Book</Link>
+        <Link to="/expenseBook/create">Create New Expense Book</Link>
       </Button>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {expenseBooks.length === 0 ? (
@@ -28,13 +28,20 @@ export default function IndexPage() {
             <Card key={book.id}>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>{book.name}</CardTitle>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDelete(book.id, book.name)}
-                >
-                  Delete
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to="/expenseBook/$id/edit" params={{ id: book.id }}>
+                      Edit
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleDelete(book.id, book.name)}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="mb-2">
