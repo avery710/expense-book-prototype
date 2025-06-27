@@ -7,7 +7,8 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 import IndexPage from "./pages";
-import CreateExpenseBookPage from "./pages/create";
+import ExpenseBookEditPage from "./pages/ExpenseBookEdit";
+import ExpenseBookCreatePage from "./pages/ExpenseBookCreate";
 
 // Create a root route
 const rootRoute = createRootRoute({
@@ -28,12 +29,22 @@ const indexRoute = createRoute({
 
 const createExpenseBookRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/create",
-  component: CreateExpenseBookPage,
+  path: "/expenseBook/create",
+  component: ExpenseBookCreatePage,
+});
+
+const expenseBookEditRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/expenseBook/$id/edit",
+  component: ExpenseBookEditPage,
 });
 
 // Create the route tree
-const routeTree = rootRoute.addChildren([indexRoute, createExpenseBookRoute]);
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  createExpenseBookRoute,
+  expenseBookEditRoute,
+]);
 
 // Create the router
 export const router = createRouter({ routeTree });
